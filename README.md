@@ -19,10 +19,10 @@ All examples you can find in ./jupyters folder:
 
 | File Name | Description |  
 |---|---|  
-| <a href="https://github.com/TheDenk/images_mixing/jupyters/example-no-CoCa.ipynb">example-no-CoCa.ipynb</a> | Short minimal example for images mixing. The weakness of this approach is that you should write prompts for each image.  |  
-| <a href="https://github.com/TheDenk/images_mixing/jupyters/example-stable-diffusion-2-base.ipynb">example-stable-diffusion-2-base.ipynb</a> | Example with stable-diffusion-2-base. For prompt generation CoCa is used.|  
-| <a href="https://github.com/TheDenk/images_mixing/jupyters/example-load-by-parts.ipynb">example-load-by-parts.ipynb</a> | Example where each diffusers module is loading separately. |  
-| <a href="https://github.com/TheDenk/images_mixing/jupyters/example-find-best-mix-result.ipynb">example-find-best-mix-result.ipynb</a> | Step by step explained how to get the parameters for mixing. (By complete enumeration of each parameter. xD) |  
+| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-no-CoCa.ipynb">example-no-CoCa.ipynb</a> | Short minimal example for images mixing. The weakness of this approach is that you should write prompts for each image.  |  
+| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-stable-diffusion-2-base.ipynb">example-stable-diffusion-2-base.ipynb</a> | Example with stable-diffusion-2-base. For prompt generation CoCa is used.|  
+| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-load-by-parts.ipynb">example-load-by-parts.ipynb</a> | Example where each diffusers module is loading separately. |  
+| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-find-best-mix-result.ipynb">example-find-best-mix-result.ipynb</a> | Step by step explained how to get the parameters for mixing. (By complete enumeration of each parameter. xD) |  
 
 ## Short Method Description
 Algorithm based on idea of <a href="https://github.com/huggingface/diffusers/blob/main/examples/community/clip_guided_stable_diffusion_img2img.py">clip guided stable diffusion img2img</a>. But with some modifications:  
