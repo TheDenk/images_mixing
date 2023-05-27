@@ -5,25 +5,6 @@ Modified and extended existing <a href="https://github.com/huggingface/diffusers
     <img src="./images/main.png" width="1200" height="400" title="preview"/> 
 </p> 
 
-## Getting Started
-```
-git clone https://github.com/TheDenk/images_mixing.git
-cd images_mixing
-
-pip -r install requirements.txt
-```
-
-## Code examples description
-
-All examples you can find in ./jupyters folder:  
-
-| File Name | Description |  
-|---|---|  
-| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-no-CoCa.ipynb">example-no-CoCa.ipynb</a> | Short minimal example for images mixing. The weakness of this approach is that you should write prompts for each image.  |  
-| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-stable-diffusion-2-base.ipynb">example-stable-diffusion-2-base.ipynb</a> | Example with stable-diffusion-2-base. For prompt generation CoCa is used.|  
-| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-load-by-parts.ipynb">example-load-by-parts.ipynb</a> | Example where each diffusers module is loading separately. |  
-| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-find-best-mix-result.ipynb">example-find-best-mix-result.ipynb</a> | Step by step explained how to get the parameters for mixing. (By complete enumeration of each parameter. xD) |  
-
 ## Short Method Description
 Algorithm based on idea of <a href="https://github.com/huggingface/diffusers/blob/main/examples/community/clip_guided_stable_diffusion_img2img.py">clip guided stable diffusion img2img</a>. But with some modifications:  
   - Now two images and (optionaly) two prompts (description of each image) are expected.
@@ -35,6 +16,83 @@ Algorithm based on idea of <a href="https://github.com/huggingface/diffusers/blo
 <p> 
     <img src="./images/difference.png" width="800" height="400" title="content_style_approach"/> 
 </p> 
+
+## Getting Started
+```
+git clone https://github.com/TheDenk/images_mixing.git
+cd images_mixing
+
+pip -r install requirements.txt
+```
+## Example with CoCa
+```python
+import torch
+import open_clip
+from PIL import Image
+from open_clip import SimpleTokenizer
+from diffusers import DiffusionPipeline
+from transformers import CLIPFeatureExtractor, CLIPModel
+
+feature_extractor = CLIPFeatureExtractor.from_pretrained(
+    "laion/CLIP-ViT-B-32-laion2B-s34B-b79K"
+)
+clip_model = CLIPModel.from_pretrained(
+    "laion/CLIP-ViT-B-32-laion2B-s34B-b79K", torch_dtype=torch.float16
+)
+coca_model = open_clip.create_model('coca_ViT-L-14', pretrained='laion2B-s13B-b90k').to('cuda')
+coca_model.dtype = torch.float16
+coca_transform = open_clip.image_transform(
+    coca_model.visual.image_size,
+    is_train = False,
+    mean = getattr(coca_model.visual, 'image_mean', None),
+    std = getattr(coca_model.visual, 'image_std', None),
+)
+coca_tokenizer = SimpleTokenizer()
+
+mixing_pipeline = DiffusionPipeline.from_pretrained(
+    "CompVis/stable-diffusion-v1-4",
+    custom_pipeline="./images_mixing.py",
+    clip_model=clip_model,
+    feature_extractor=feature_extractor,
+    coca_model=coca_model,
+    coca_tokenizer=coca_tokenizer,
+    coca_transform=coca_transform,
+    torch_dtype=torch.float16,
+)
+mixing_pipeline = mixing_pipeline.to("cuda")
+
+generator = torch.Generator(device="cuda").manual_seed(17) 
+
+content_image = Image.open('./images/shrek.jpg').convert("RGB")
+style_image = Image.open('./images/gigachad.jpg').convert("RGB")
+
+pipe_images = mixing_pipeline(
+    num_inference_steps=50,
+    content_image=content_image,
+    style_image=style_image,
+    noise_strength=0.7,
+    slerp_latent_style_strength=0.2,
+    slerp_prompt_style_strength=0.8,
+    slerp_clip_image_style_strength=0.8,
+    guidance_scale=9.0,
+    batch_size=1,
+    clip_guidance_scale=100,
+    generator=generator,
+).images
+
+pipe_images[0]
+```
+## Code examples description
+
+All examples you can find in ./jupyters folder:  
+
+| File Name | Description |  
+|---|---|  
+| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-no-CoCa.ipynb">example-no-CoCa.ipynb</a> | Short minimal example for images mixing. The weakness of this approach is that you should write prompts for each image.  |  
+| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-stable-diffusion-2-base.ipynb">example-stable-diffusion-2-base.ipynb</a> | Example with stable-diffusion-2-base. For prompt generation CoCa is used.|  
+| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-load-by-parts.ipynb">example-load-by-parts.ipynb</a> | Example where each diffusers module is loading separately. |  
+| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-find-best-mix-result.ipynb">example-find-best-mix-result.ipynb</a> | Step by step explained how to get the parameters for mixing. (By complete enumeration of each parameter. xD) |  
+
 
 ## Short Parameters Description
 #### Each `slerp_` parameter has an impact on both images - style and content (more style - less content and and vice versa)
