@@ -1,7 +1,8 @@
 # CLIP Guided Images Mixing With Stable Diffusion
+Now you can use this images mixing in <a href="https://github.com/huggingface/diffusers/tree/main/examples/community">official diffusers repo</a>.  
+  
 This approach allows you to combine two images using standard diffusion models `without any prior models`.
 Modified and extended existing <a href="https://github.com/huggingface/diffusers/blob/main/examples/community/clip_guided_stable_diffusion_img2img.py">clip guided stable diffusion algorithm</a> to work with images.  
-Now you can use this images mixing in <a href="https://github.com/huggingface/diffusers/tree/main/examples/community">official diffusers repo</a>.
 <p>
     <img src="./images/main.png" width="1200" height="400" title="preview"/>
 </p>
