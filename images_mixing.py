@@ -283,6 +283,9 @@ class CLIPGuidedImagesMixingStableDiffusion(DiffusionPipeline):
         slerp_prompt_style_strength: float = 0.1,
         slerp_clip_image_style_strength: float = 0.1,
         print_promts: bool = False,
+        mask: torch.FloatTensor = None,
+        object_noise_coef: float = 0.5,
+
     ):
 
         if isinstance(generator, list) and len(generator) != batch_size:
@@ -375,6 +378,20 @@ class CLIPGuidedImagesMixingStableDiffusion(DiffusionPipeline):
             self.device,
             generator
         )
+        
+        if mask is not None:
+            content_size = content_latents.shape[-2:]
+            object_mask = torch.nn.functional.interpolate(mask, size=content_size, mode='nearest')
+            object_mask = object_mask.bool().repeat(1, 4, 1, 1)
+                    
+            object_latents = self.prepare_latents(
+                preprocessed_content_image,
+                torch.tensor([int(x*object_noise_coef) for x in latent_timestep]),
+                batch_size,
+                text_embeddings.dtype,
+                self.device,
+                generator
+            )
 
         preprocessed_style_image = preprocess(style_image, width, height)
         style_latents = self.prepare_latents(
@@ -499,6 +516,9 @@ class CLIPGuidedImagesMixingStableDiffusion(DiffusionPipeline):
                 # compute the previous noisy sample x_t -> x_t-1
                 latents = self.scheduler.step(
                     noise_pred, t, latents, **extra_step_kwargs).prev_sample
+
+                if mask is not None and i == int(len(timesteps)*object_noise_coef):
+                    latents[object_mask] = object_latents[object_mask]
 
         # Hardcode 0.18215 because stable-diffusion-2-base has not self.vae.config.scaling_factor
         latents = 1 / 0.18215 * latents

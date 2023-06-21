@@ -19,6 +19,7 @@ All examples you can find in ./jupyters folder:
 | <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-stable-diffusion-2-base.ipynb">example-stable-diffusion-2-base.ipynb</a> | Example with stable-diffusion-2-base. For prompt generation CoCa is used.|
 | <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-load-by-parts.ipynb">example-load-by-parts.ipynb</a> | Example where each diffusers module is loading separately. |
 | <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-find-best-mix-result.ipynb">example-find-best-mix-result.ipynb</a> | Step by step explained how to get the parameters for mixing. (By complete enumeration of each parameter. xD) |
+| <a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-as-augmentation.ipynb">example-as-augmentation.ipynb.ipynb</a> | Using image mixing for image augmentation. Summer to winter example.  |
 
 
 ## Short Method Description
@@ -91,6 +92,12 @@ pipe_images[0]
 ```
 <p>
     <img src="./images/boromir_gigachad_with_prompts.png" width="900" height="300" title="boromir_gigachad"/>
+</p>
+
+## Using as augmentation
+With <a href="https://github.com/facebookresearch/segment-anything.git">Segment anything</a> you can effectively augmenting a dataset of images (<a href="https://github.com/TheDenk/images_mixing/blob/main/jupyters/example-as-augmentation.ipynb">Jupyter notebook example</a>).  
+<p>
+    <img src="./images/add_winter_on_railway.png" width="480" height="600" title="boromir_gigachad"/>
 </p>
 
 ## Short Parameters Description
