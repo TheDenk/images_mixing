@@ -191,7 +191,7 @@ class CLIPGuidedImagesMixingStableDiffusion(DiffusionPipeline):
     def get_clip_image_embeddings(self, image, batch_size):
         clip_image_input = self.feature_extractor.preprocess(image)
         clip_image_features = torch.from_numpy(
-            clip_image_input['pixel_values'][0]).unsqueeze(0).to(self.device).half()
+            clip_image_input['pixel_values'][0]).unsqueeze(0).to(device=self.device, dtype=self.clip_model.dtype)
         image_embeddings_clip = self.clip_model.get_image_features(
             clip_image_features)
         image_embeddings_clip = image_embeddings_clip / \
