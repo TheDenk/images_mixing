@@ -10,7 +10,10 @@ Modified and extended existing <a href="https://github.com/huggingface/diffusers
 ```WARNING: It's hard to get a good result of image mixing the first time.```
 
 ## Code examples description
-
+<a target="_blank" href="https://colab.research.google.com/github/TheDenk/images_mixing/blob/main/jupyters/colab_example_images_mixing.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+  
 All examples you can find in ./jupyters folder:
 
 | File Name | Description |
